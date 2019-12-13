@@ -103,7 +103,7 @@ class ClickerView extends React.Component {
           reference={reference}
         />
         <NegaposiButtons
-          onClick={this.next.bind(this)}
+          onClick={onClick}
         />
       </Container>
     )
