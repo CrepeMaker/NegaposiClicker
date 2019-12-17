@@ -2,8 +2,6 @@
 
 $env_ini = parse_ini_file("../env.ini");
 
-var_dump($env_ini);
-
 $db = new mysqli($env_ini['DB_SERVER'], $env_ini['DB_USER'], $env_ini['DB_PASSWORD'], $env_ini['DB_DATABASE']);
 
 if( $db->connect_error ){
