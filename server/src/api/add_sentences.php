@@ -17,24 +17,31 @@ try{
   $request = json_decode(file_get_contents('php://input'), true);
   var_dump($request);
 
+  if (!$request) {
+    http_response_code(400);
+    echo json_encode(array('error' => 'Invalid Request'));
+    exit(0);
+  }
+
   foreach ($request as $item) {
     $id = $item['id'];
     $sentence = $item['sentence'];
     $reference = $item['reference'];
 
-    var_dump($item);
-
     $stmt = $db->prepare("INSERT INTO sentences VALUES (?, ?, ?)");
     $stmt->bind_param('dss', $id, $sentence, $reference);
-    $stmt->execute();
+    $success = $stmt->execute();
 
-    var_dump($data);
+    if (!$success) {
+      throw new Exception('Error in SQL queries.');
+    }
   }
 
   $db->commit();
 
 } catch (Exception $e) {
   http_response_code(500);
-  echo 'Transaction failed: ' . $e->getMessage();
-  $DB->rollback();
+  echo json_encode(array('error' => $e->getMessage()));
+
+  $db->rollback();
 }
