@@ -20,10 +20,12 @@ try{
     exit(0);
   }
 
-  if (!array_key_exists('token', $request) || $request['token'] === $env_ini['TOKEN']) {
+  if (!array_key_exists('token', $request) || $request['token'] !== $env_ini['TOKEN']) {
     http_response_code(402);
     echo json_encode(array('error' => 'Invalid Token'));
   }
+
+  $num = 0;
 
   foreach ($request['data'] as $item) {
     $id = $item['id'];
@@ -42,9 +44,14 @@ try{
     if (!$success) {
       throw new Exception('Error in SQL queries.');
     }
+
+    $num += 1;
   }
 
   $db->commit();
+
+  http_response_code(200);
+  echo json_encode(array('success' => 'OK', 'num' => $num));
 
 } catch (Exception $e) {
   http_response_code(500);
