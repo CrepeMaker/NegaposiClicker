@@ -4,6 +4,7 @@
 
 # server
 public/api
+public/env.ini
 server/src/env.ini
 
 phpmyadmin

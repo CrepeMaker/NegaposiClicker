@@ -1,4 +1,4 @@
-name: Deploy to Github Pages
+name: Deploy to Star Server
 
 on:
   push:
@@ -16,10 +16,11 @@ jobs:
     - name: Install modules
       run: npm install
     - name: Build
-      run: npm run build
+      run: ./build.sh
     - name: Deploy
-      uses: peaceiris/actions-gh-pages@v2.5.0
-      env:
-        PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-        PUBLISH_BRANCH: gh-pages
-        PUBLISH_DIR: ./public
+      uses: sebastianpopp/git-ftp-action@releases/v2
+      with:
+        url: 'ftpes://sv38.star.ne.jp/negaposi.crepemaker.xyz'
+        user: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        syncroot: 'public'
