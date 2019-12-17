@@ -12,9 +12,26 @@ if( $db->connect_error ){
 }
 
 try{
+  $db->autocommit(FALSE);
 
   $request = json_decode(file_get_contents('php://input'), true);
-  echo $request;
+  var_dump($request);
+
+  foreach ($request as $item) {
+    $id = $item['id'];
+    $sentence = $item['sentence'];
+    $reference = $item['reference'];
+
+    var_dump($item);
+
+    $stmt = $db->prepare("INSERT INTO sentences VALUES (?, ?, ?)");
+    $stmt->bind_param('dss', $id, $sentence, $reference);
+    $stmt->execute();
+
+    var_dump($data);
+  }
+
+  $db->commit();
 
 } catch (Exception $e) {
   http_response_code(500);
