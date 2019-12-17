@@ -27,6 +27,11 @@ try{
     $reference = $item['reference'];
 
     $stmt = $db->prepare("INSERT INTO sentences VALUES (?, ?, ?)");
+
+    if (!$stmt) {
+      throw new Exception('Error in SQL queries.');
+    }
+
     $stmt->bind_param('dss', $id, $sentence, $reference);
     $success = $stmt->execute();
 
