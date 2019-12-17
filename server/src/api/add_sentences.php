@@ -13,15 +13,19 @@ try{
   $db->autocommit(FALSE);
 
   $request = json_decode(file_get_contents('php://input'), true);
-  var_dump($request);
 
-  if (!$request) {
+  if (!$request || !array_key_exists('data', $request)) {
     http_response_code(400);
     echo json_encode(array('error' => 'Invalid Request'));
     exit(0);
   }
 
-  foreach ($request as $item) {
+  if (array_key_exists('token', $request) || $request['token'] === $env_ini['TOKEN']) {
+    http_response_code(402);
+    echo json_encode(array('error' => 'Invalid Token'));
+  }
+
+  foreach ($request['data'] as $item) {
     $id = $item['id'];
     $sentence = $item['sentence'];
     $reference = $item['reference'];
