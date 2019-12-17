@@ -2,6 +2,9 @@
 *.csv
 *.db
 
+# server
+public/api
+
 # client
 node_modules
 bundle.js
