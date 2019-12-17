@@ -4,6 +4,10 @@
 
 # server
 public/api
+server/src/env.ini
+
+phpmyadmin
+mysql
 
 # client
 node_modules
