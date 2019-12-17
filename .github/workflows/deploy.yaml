@@ -15,12 +15,12 @@ jobs:
         node-version: '10.x'
     - name: Install modules
       run: npm install
+    - name: Install git-ftp
+      run: apt-get update && apt-get install -y git-ftp
     - name: Build
       run: ./build.sh
     - name: Deploy
-      uses: sebastianpopp/git-ftp-action@releases/v2
-      with:
-        url: 'ftpes://sv38.star.ne.jp/negaposi.crepemaker.xyz'
-        user: ${{ secrets.FTP_USER }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        syncroot: 'public'
+      run: git catchup && \
+           git ftp push \
+           --syncroot "public" --user ${{ secrets.FTP_USER }} --passwd ${{ secrets.FTP_PASSWORD }} \
+           "ftpes://sv38.star.ne.jp/negaposi.crepemaker.xyz"
