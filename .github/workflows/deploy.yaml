@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-node@v1
@@ -16,13 +16,11 @@ jobs:
     - name: Install modules
       run: npm install
     - name: Install git-ftp
-      run: sudo apt update && sudo apt install -y git git-ftp
+      run: sudo apt update && sudo apt install -y git-ftp
     - name: Build
       run: ./build.sh
     - name: Deploy
-      run: git config git-ftp.url ftpes://sv38.star.ne.jp/negaposi.crepemaker.xyz && \
-           git config git-ftp.user ${{ secrets.FTP_USER }} && \
-           git config git-ftp.password ${{ secrets.FTP_PASSWORD }} && \
-           git config git-ftp.syncroot public && \
-           git ftp catchup && \
-           git ftp push
+      run: .github/scripts/deploy.sh
+      env:
+        FTP_USER: ${{ secrets.FTP_USER }}
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
