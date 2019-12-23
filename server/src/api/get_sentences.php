@@ -12,19 +12,20 @@ if( $db->connect_error ){
 try{
   $db->autocommit(FALSE);
 
-  $request = json_decode(file_get_contents('php://input'), true);
+  //$request = json_decode(file_get_contents('php://input'), true);
 
-  if (!array_key_exists('token', $request) || $request['token'] !== $env_ini['TOKEN']) {
+  if (!$_GET || !array_key_exists('token', $_GET) || $_GET['token'] !== $env_ini['TOKEN']) {
     http_response_code(402);
     echo json_encode(array('error' => 'Invalid Token'));
+    return;
   }
 
   $num = 0;
 
-  $offset = array_key_exists('offset', $request) ? $request['offset'] : 0;
-  $size = array_key_exists('size', $request) ? $request['size'] : 20;
+  $offset = array_key_exists('offset', $_GET) ? $_GET['offset'] : 0;
+  $size = array_key_exists('size', $_GET) ? $_GET['size'] : 20;
 
-  $stmt = $db->prepare("SELECT id, sentence FROM sentences LIMIT ? OFFSET ?");
+  $stmt = $db->prepare("SELECT id, sentence, reference FROM sentences LIMIT ? OFFSET ?");
   $stmt->bind_param('dd', $size, $offset);
   $success = $stmt->execute();
 
@@ -34,10 +35,10 @@ try{
 
   $data = [];
 
-  $stmt->bind_result($id, $sentence);
+  $stmt->bind_result($id, $sentence, $reference);
 
   while ($stmt->fetch()) {
-    array_push($data, array('id' => $id, 'sentence' => $sentence));
+    array_push($data, array('id' => $id, 'sentence' => $sentence, 'reference' => $reference));
   }
   $stmt->close();
 

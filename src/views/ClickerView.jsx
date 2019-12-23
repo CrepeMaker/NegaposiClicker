@@ -12,15 +12,25 @@ class ClickerView extends React.Component {
       id: 0,
     }
 
+    const url = process.env.NODE_ENV === 'development' ?
+      'http://localhost:8080' :
+      'https://negaposi.crepemaker.xyz/api/get_sentences.php'
+
     this.api = createAxios({
-      baseURL: 'http://localhost:3000',
+      baseURL: url,
       timeout: 1000,
       headers: { 'Content-Type': 'application/json' },
     })
   }
 
   async getData(id) {
-    const res = await this.api.get('samples/comments.json')
+    const res = await this.api.get('api/get_sentences.php', {
+      params: {
+        token: 'g264t3sx65cw9mwiedyf4my9a',
+        offset: 0,
+        size: 20,
+      }
+    })
 
     if (!res.data || !res.data.length) return {}
 
@@ -28,8 +38,8 @@ class ClickerView extends React.Component {
       if (item.id >= id) {
         return {
           id: item.id,
-          sentence: item.comment,
-          reference: 'samples',
+          sentence: item.sentence,
+          reference: item.reference,
         }
       }
     }
