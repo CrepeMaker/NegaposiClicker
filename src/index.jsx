@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { HashRouter, Route } from 'react-router-dom'
+import { BrowserRouter, Route } from 'react-router-dom'
 import { Container } from 'react-bootstrap'
 import { HomeView, ClickerView } from './views'
 import { TopBar } from './components'
@@ -9,7 +9,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
 render(
   <div>
-    <HashRouter>
+    <BrowserRouter>
       <div>
         <TopBar />
         <Container>
@@ -17,7 +17,7 @@ render(
           <Route exact={true} path="/clicker" component={ClickerView} />
         </Container>
       </div>
-    </HashRouter>
+    </BrowserRouter>
   </div>,
   document.getElementById('app')
 );
