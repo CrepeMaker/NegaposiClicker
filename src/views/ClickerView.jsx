@@ -26,29 +26,37 @@ class ClickerView extends React.Component {
   }
 
   async getData(id) {
-    const { offset, size } = this.state
+    let { offset } = this.state
+    const { size } = this.state
 
-    const res = await this.api.get('api/get_sentences.php', {
-      params: {
-        token: 'g264t3sx65cw9mwiedyf4my9a',
-        offset,
-        size,
+    while (1) {
+      const res = await this.api.get('api/get_sentences.php', {
+        params: {
+          token: 'g264t3sx65cw9mwiedyf4my9a',
+          offset,
+          size,
+        }
+      })
+
+      if (!res.data || !res.data.length) return {
+        id: -1,
+        sentence: "終わり",
+        reference: "",
       }
-    })
 
-    if (!res.data || !res.data.length) return {}
-
-    for (const item of res.data) {
-      if (item.id >= id) {
-        return {
-          id: item.id,
-          sentence: item.sentence,
-          reference: item.reference,
+      for (const item of res.data) {
+        if (item.id >= id) {
+          return {
+            id: item.id,
+            sentence: item.sentence,
+            reference: item.reference,
+          }
         }
       }
-    }
 
-    this.setState({ offset: offset + size })
+      offset += size
+      this.setState({ offset: offset })
+    }
 
 
     return {}
@@ -61,19 +69,36 @@ class ClickerView extends React.Component {
   }
 
   async select(negaposi) {
+    const { id: sentence_id } = this.state
+    let class_id = -1
+
     switch (negaposi) {
       case NegaposiEnums.POSITIVE:
+        class_id = 1
         console.log('POSITIVE')
         break
       case NegaposiEnums.NEGATIVE:
+        class_id = 2
         console.log('NEGATIVE')
         break
       case NegaposiEnums.UNKNOWN:
+        class_id = 9
         console.log('UNKNOWN')
         break
       default:
         console.log('default')
         break
+    }
+
+    if (sentence_id >= 0 && class_id != -1) {
+      const res = await this.api.post('api/post_responces.php', {
+        token: 'g264t3sx65cw9mwiedyf4my9a',
+        respondent: 'test',
+        data: [
+          { sentence_id, class: class_id },
+        ]
+      })
+      console.log(res)
     }
 
     await this.next()

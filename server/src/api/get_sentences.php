@@ -10,14 +10,11 @@ if( $db->connect_error ){
 }
 
 try{
-  $db->autocommit(FALSE);
-
-  //$request = json_decode(file_get_contents('php://input'), true);
 
   if (!$_GET || !array_key_exists('token', $_GET) || $_GET['token'] !== $env_ini['TOKEN']) {
     http_response_code(402);
     echo json_encode(array('error' => 'Invalid Token'));
-    return;
+    exit(0);
   }
 
   $num = 0;

@@ -14,7 +14,7 @@ try{
 
   $request = json_decode(file_get_contents('php://input'), true);
 
-  if (!$request || !array_key_exists('data', $request)) {
+  if (!$request || !array_key_exists('data', $request) || !array_key_exists('respondent', $request)) {
     http_response_code(400);
     echo json_encode(array('error' => 'Invalid Request'));
     exit(0);
@@ -26,20 +26,24 @@ try{
     exit(0);
   }
 
+  $respondent = $request['respondent'];
   $num = 0;
 
   foreach ($request['data'] as $item) {
-    $id = $item['id'];
-    $sentence = $item['sentence'];
-    $reference = $item['reference'];
+    $sentence_id = $item['sentence_id'];
+    $class = $item['class'];
 
-    $stmt = $db->prepare("INSERT INTO sentences VALUES (?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO responces (sentence_id, respondent, class) VALUES (?, ?, ?)");
+
+    echo $sentence_id, ",";
+    echo $class;
+    echo $respondent;
 
     if (!$stmt) {
       throw new Exception('Error in SQL queries.');
     }
 
-    $stmt->bind_param('dss', $id, $sentence, $reference);
+    $stmt->bind_param('dsd', $sentence_id, $respondent, $class);
     $success = $stmt->execute();
 
     if (!$success) {
