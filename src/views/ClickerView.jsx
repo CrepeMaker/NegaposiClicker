@@ -10,6 +10,8 @@ class ClickerView extends React.Component {
     super(props)
     this.state = {
       id: 0,
+      offset: 0,
+      size: 20,
     }
 
     const url = process.env.NODE_ENV === 'development' ?
@@ -24,11 +26,13 @@ class ClickerView extends React.Component {
   }
 
   async getData(id) {
+    const { offset, size } = this.state
+
     const res = await this.api.get('api/get_sentences.php', {
       params: {
         token: 'g264t3sx65cw9mwiedyf4my9a',
-        offset: 0,
-        size: 20,
+        offset,
+        size,
       }
     })
 
@@ -43,6 +47,9 @@ class ClickerView extends React.Component {
         }
       }
     }
+
+    this.setState({ offset: offset + size })
+
 
     return {}
   }
