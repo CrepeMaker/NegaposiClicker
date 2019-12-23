@@ -16,7 +16,7 @@ class ClickerView extends React.Component {
 
     const url = process.env.NODE_ENV === 'development' ?
       'http://localhost:8080' :
-      'https://negaposi.crepemaker.xyz/api/get_sentences.php'
+      'https://negaposi.crepemaker.xyz'
 
     this.api = createAxios({
       baseURL: url,
