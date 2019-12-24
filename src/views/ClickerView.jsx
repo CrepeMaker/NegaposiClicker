@@ -14,6 +14,8 @@ class ClickerView extends React.Component {
 
     this.state = {
       id: 0,
+      sentence: '',
+      reference: '',
       offset: 0,
       size: 20,
       name,
@@ -48,8 +50,8 @@ class ClickerView extends React.Component {
 
     if (!res.data || !res.data.length) return {
       id: -1,
-      sentence: "終わり",
-      reference: "",
+      sentence: '終わり',
+      reference: '',
     }
 
     for (const item of res.data) {
