@@ -31,7 +31,7 @@ try{
   $stmt = $db->prepare(
     'SELECT id, sentence, reference, IFNULL(c, 0) as "count" FROM sentences ' .
     'LEFT JOIN (SELECT sentence_id, COUNT(*) as c FROM responces WHERE respondent = ? GROUP BY sentence_id) ' .
-    'AS A ON sentences.id = A.sentence_id WHERE c IS NULL ORDER BY id LIMIT ?'
+    'AS A ON sentences.id = A.sentence_id WHERE c IS NULL AND id >= 0 ORDER BY id LIMIT ?'
   );
 
   $stmt->bind_param('sd', $name, $size);
