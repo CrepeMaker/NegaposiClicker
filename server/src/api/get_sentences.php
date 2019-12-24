@@ -17,13 +17,24 @@ try{
     exit(0);
   }
 
+  if (!$_GET || !array_key_exists('name', $_GET) || !is_string($_GET['name']) || !strlen($_GET['name'])) {
+    http_response_code(402);
+    echo json_encode(array('error' => 'Invalid Request'));
+    exit(0);
+  }
+
   $num = 0;
 
-  $offset = array_key_exists('offset', $_GET) ? $_GET['offset'] : 0;
+  $name = $_GET['name'];
   $size = array_key_exists('size', $_GET) ? $_GET['size'] : 20;
 
-  $stmt = $db->prepare("SELECT id, sentence, reference FROM sentences LIMIT ? OFFSET ?");
-  $stmt->bind_param('dd', $size, $offset);
+  $stmt = $db->prepare(
+    'SELECT id, sentence, reference, IFNULL(c, 0) as "count" FROM sentences ' .
+    'LEFT JOIN (SELECT sentence_id, COUNT(*) as c FROM responces WHERE respondent = ? GROUP BY sentence_id) ' .
+    'AS A ON sentences.id = A.sentence_id WHERE c IS NULL ORDER BY id LIMIT ?'
+  );
+
+  $stmt->bind_param('sd', $name, $size);
   $success = $stmt->execute();
 
   if (!$success) {
@@ -32,10 +43,10 @@ try{
 
   $data = [];
 
-  $stmt->bind_result($id, $sentence, $reference);
+  $stmt->bind_result($id, $sentence, $reference, $c);
 
   while ($stmt->fetch()) {
-    array_push($data, array('id' => $id, 'sentence' => $sentence, 'reference' => $reference));
+    array_push($data, array('id' => $id, 'sentence' => $sentence, 'reference' => $reference, 'count' => $c));
   }
   $stmt->close();
 

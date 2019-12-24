@@ -3,7 +3,8 @@ import { withRouter } from 'react-router'
 import { Button, Container } from 'react-bootstrap'
 import { SentenceCard, NegaposiButtons } from '../components'
 import styles from './ClickerView.scss'
-import { createAxios } from '../utils/axios-cache'
+//import { createAxios } from '../utils/axios-cache'
+import { create } from 'axios'
 import NegaposiEnums from '../components/clicker/NagaposiEnums'
 
 class ClickerView extends React.Component {
@@ -27,7 +28,7 @@ class ClickerView extends React.Component {
       'http://localhost:8080' :
       'https://negaposi.crepemaker.xyz'
 
-    this.api = createAxios({
+    this.api = create({
       baseURL: url,
       timeout: 1000,
       headers: { 'Content-Type': 'application/json' },
@@ -35,38 +36,31 @@ class ClickerView extends React.Component {
   }
 
   async getData(id) {
-    let { offset } = this.state
-    const { size } = this.state
+    const { size, name } = this.state
 
-    while (1) {
-      const res = await this.api.get('api/get_sentences.php', {
-        params: {
-          token: 'g264t3sx65cw9mwiedyf4my9a',
-          offset,
-          size,
-        }
-      })
-
-      if (!res.data || !res.data.length) return {
-        id: -1,
-        sentence: "終わり",
-        reference: "",
+    const res = await this.api.get('api/get_sentences.php', {
+      params: {
+        token: 'g264t3sx65cw9mwiedyf4my9a',
+        size: 1,
+        name,
       }
+    })
 
-      for (const item of res.data) {
-        if (item.id >= id) {
-          return {
-            id: item.id,
-            sentence: item.sentence,
-            reference: item.reference,
-          }
-        }
-      }
-
-      offset += size
-      this.setState({ offset: offset })
+    if (!res.data || !res.data.length) return {
+      id: -1,
+      sentence: "終わり",
+      reference: "",
     }
 
+    for (const item of res.data) {
+      if (item.id >= id) {
+        return {
+          id: item.id,
+          sentence: item.sentence,
+          reference: item.reference,
+        }
+      }
+    }
 
     return {}
   }
