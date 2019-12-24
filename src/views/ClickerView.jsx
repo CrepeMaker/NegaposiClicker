@@ -13,7 +13,7 @@ class ClickerView extends React.Component {
     const name = localStorage.getItem('name') || ''
 
     this.state = {
-      id: 0,
+      id: -1,
       sentence: '',
       reference: '',
       offset: 0,
