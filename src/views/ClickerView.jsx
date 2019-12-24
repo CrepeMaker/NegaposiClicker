@@ -17,7 +17,7 @@ class ClickerView extends React.Component {
       sentence: '',
       reference: '',
       offset: 0,
-      size: 20,
+      size: 1,
       name,
     }
 
@@ -37,13 +37,13 @@ class ClickerView extends React.Component {
     })
   }
 
-  async getData(id) {
+  async getData() {
     const { size, name } = this.state
 
     const res = await this.api.get('api/get_sentences.php', {
       params: {
         token: 'g264t3sx65cw9mwiedyf4my9a',
-        size: 1,
+        size,
         name,
       }
     })
@@ -55,7 +55,7 @@ class ClickerView extends React.Component {
     }
 
     for (const item of res.data) {
-      if (item.id >= id) {
+      if (item.id >= 0) {
         return {
           id: item.id,
           sentence: item.sentence,
@@ -68,8 +68,7 @@ class ClickerView extends React.Component {
   }
 
   async next() {
-    const { id } = this.state
-    const res = await this.getData(id + 1)
+    const res = await this.getData()
     this.setState(res)
   }
 
