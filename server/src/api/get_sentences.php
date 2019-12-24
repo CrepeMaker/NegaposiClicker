@@ -11,7 +11,7 @@ if( $db->connect_error ){
 
 try{
 
-  if (!$_GET || !array_key_exists('token', $_GET) || $_GET['token'] !== $env_ini['TOKEN']) {
+  if (!$_GET || !array_key_exists('token', $_GET) || $_GET['token'] !== $env_ini['CLIENT_TOKEN']) {
     http_response_code(402);
     echo json_encode(array('error' => 'Invalid Token'));
     exit(0);

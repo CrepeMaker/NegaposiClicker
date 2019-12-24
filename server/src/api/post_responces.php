@@ -20,7 +20,7 @@ try{
     exit(0);
   }
 
-  if (!array_key_exists('token', $request) || $request['token'] !== $env_ini['TOKEN']) {
+  if (!array_key_exists('token', $request) || $request['token'] !== $env_ini['CLIENT_TOKEN']) {
     http_response_code(402);
     echo json_encode(array('error' => 'Invalid Token'));
     exit(0);
