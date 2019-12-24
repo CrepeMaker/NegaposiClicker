@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router'
 import { Button, Container } from 'react-bootstrap'
 import { SentenceCard, NegaposiButtons } from '../components'
 import styles from './ClickerView.scss'
@@ -8,10 +9,18 @@ import NegaposiEnums from '../components/clicker/NagaposiEnums'
 class ClickerView extends React.Component {
   constructor(props) {
     super(props)
+    const name = localStorage.getItem('name') || ''
+
     this.state = {
       id: 0,
       offset: 0,
       size: 20,
+      name,
+    }
+
+    if (!name) {
+      this.props.history.push('/')
+      return
     }
 
     const url = process.env.NODE_ENV === 'development' ?
@@ -69,7 +78,7 @@ class ClickerView extends React.Component {
   }
 
   async select(negaposi) {
-    const { id: sentence_id } = this.state
+    const { id: sentence_id, name } = this.state
     let class_id = -1
 
     switch (negaposi) {
@@ -93,12 +102,11 @@ class ClickerView extends React.Component {
     if (sentence_id >= 0 && class_id != -1) {
       const res = await this.api.post('api/post_responces.php', {
         token: 'g264t3sx65cw9mwiedyf4my9a',
-        respondent: 'test',
+        respondent: name,
         data: [
           { sentence_id, class: class_id },
         ]
       })
-      console.log(res)
     }
 
     await this.next()
@@ -153,5 +161,5 @@ class ClickerView extends React.Component {
 
 }
 
-export default ClickerView
+export default withRouter(ClickerView)
 

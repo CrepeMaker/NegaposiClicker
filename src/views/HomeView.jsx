@@ -1,7 +1,8 @@
 import React from 'react'
 import { withRouter } from 'react-router'
-import { Button, Jumbotron } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import styles from './HomeView.scss'
+import { StartButton } from '../components'
 
 class HomeView extends React.Component {
   constructor(props) {
@@ -9,22 +10,20 @@ class HomeView extends React.Component {
     this.state = {}
   }
 
-  start() {
-    this.props.history.push('/clicker')
+  start(name) {
+    if (name)
+      this.props.history.push('/clicker')
   }
 
   render() {
     return (
-      <div className={styles.self}>
-        <div className='mx-auto'>
-          <Button
-            size='lg'
-            onClick={this.start.bind(this)}
-          >
-            Start
-          </Button>
-        </div>
-      </div>
+      <Container className={styles.self}>
+        <Row>
+          <Col md={{ span: 8, offset: 2 }}>
+            <StartButton onClick={this.start.bind(this)} />
+          </Col>
+        </Row>
+      </Container >
     )
   }
 }
