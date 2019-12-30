@@ -14,12 +14,10 @@ RewriteRule . /index.html [L]
 </Files>
 
 <IfModule mod_headers.c>
-  <filesMatch "\.(css|js)$">
+  <filesMatch "\.(css)$">
     Header set Cache-Control "must-revalidate"
   </filesMatch>
-</IfModule>
-
-<IfModule mod_expires.c>
-    ExpiresActive on
-    ExpiresDefault     "access plus 1 hour"
+  <filesMatch "\.(js)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </filesMatch>
 </IfModule>
