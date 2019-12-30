@@ -35,10 +35,6 @@ try{
 
     $stmt = $db->prepare("INSERT INTO responces (sentence_id, respondent, class) VALUES (?, ?, ?)");
 
-    echo $sentence_id, ",";
-    echo $class;
-    echo $respondent;
-
     if (!$stmt) {
       throw new Exception('Error in SQL queries.');
     }
