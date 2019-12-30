@@ -1,10 +1,9 @@
 import React from 'react'
 import { withRouter } from 'react-router'
-import { Button, Container } from 'react-bootstrap'
-import { SentenceCard, NegaposiButtons } from '../components'
-import styles from './ClickerView.scss'
-//import { createAxios } from '../utils/axios-cache'
+import { Container } from 'react-bootstrap'
+import { Mutex } from 'await-semaphore'
 import { create } from 'axios'
+import { SentenceCard, NegaposiButtons } from '../components'
 import NegaposiEnums from '../components/clicker/NagaposiEnums'
 
 class ClickerView extends React.Component {
@@ -35,6 +34,9 @@ class ClickerView extends React.Component {
       timeout: 1000,
       headers: { 'Content-Type': 'application/json' },
     })
+
+    this.mutex = new Mutex()
+    this.sentList = new Set()
   }
 
   async getData() {
@@ -94,15 +96,20 @@ class ClickerView extends React.Component {
         break
     }
 
-    if (sentence_id >= 0 && class_id != -1) {
-      const res = await this.api.post('api/post_responces.php', {
-        token: 'g264t3sx65cw9mwiedyf4my9a',
-        respondent: name,
-        data: [
-          { sentence_id, class: class_id },
-        ]
-      })
-    }
+    this.mutex.use(async () => {
+      if (!this.sentList.has(sentence_id)) {
+        if (sentence_id >= 0 && class_id != -1) {
+          const res = await this.api.post('api/post_responces.php', {
+            token: 'g264t3sx65cw9mwiedyf4my9a',
+            respondent: name,
+            data: [
+              { sentence_id, class: class_id },
+            ]
+          })
+        }
+        this.sentList.add(sentence_id)
+      }
+    })
 
     await this.next()
   }
