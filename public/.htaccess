@@ -12,8 +12,14 @@ RewriteRule . /index.html [L]
 <Files ~ "^\.(.*)$|README">
   deny from all
 </Files>
+
 <IfModule mod_headers.c>
   <filesMatch "\.(css|js)$">
     Header set Cache-Control "must-revalidate"
   </filesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresDefault     "access plus 1 hour"
 </IfModule>
