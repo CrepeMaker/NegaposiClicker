@@ -1,6 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router'
-import { Container, Row, Col, ProgressBar } from 'react-bootstrap'
+import { Container, Row, Col, ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { create } from '../utils/axios-api'
 import styles from './InfoView.scss'
 
@@ -30,12 +30,16 @@ class InfoView extends React.Component {
           {id}
         </Col>
         <Col md={10}>
-          <ProgressBar
-            animated
-            variant={variant}
-            now={num * 100 / all}
-            label={`${num}/${all}`}
-          />
+          <OverlayTrigger
+            overlay={<Tooltip id="tooltip-disabled">{`${id}: ${num}/${all}`}</Tooltip>}
+          >
+            <ProgressBar
+              animated
+              variant={variant}
+              now={num * 100 / all}
+              label={`${num}/${all}`}
+            />
+          </OverlayTrigger>
         </Col>
       </Row>
     )
