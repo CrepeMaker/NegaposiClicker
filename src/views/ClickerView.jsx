@@ -2,7 +2,7 @@ import React from 'react'
 import { withRouter } from 'react-router'
 import { Container } from 'react-bootstrap'
 import { Mutex } from 'await-semaphore'
-import { create } from 'axios'
+import { create } from '../utils/axios-api'
 import { SentenceCard, NegaposiButtons } from '../components'
 import NegaposiEnums from '../components/clicker/NagaposiEnums'
 
@@ -25,15 +25,7 @@ class ClickerView extends React.Component {
       return
     }
 
-    const url = process.env.NODE_ENV === 'development' ?
-      'http://localhost:8080' :
-      'https://negaposi.crepemaker.xyz'
-
-    this.api = create({
-      baseURL: url,
-      timeout: 1000,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    this.api = create()
 
     this.mutex = new Mutex()
     this.sentList = new Set()
