@@ -33,17 +33,17 @@ try{
     $sentence = $item['sentence'];
     $reference = $item['reference'];
 
-    $stmt = $db->prepare("INSERT INTO sentences VALUES (?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO sentences(id, sentence, reference) VALUES (?, ?, ?)");
 
     if (!$stmt) {
-      throw new Exception('Error in SQL queries.');
+      throw new Exception('Error in SQL queries.' . $db->error);
     }
 
     $stmt->bind_param('dss', $id, $sentence, $reference);
     $success = $stmt->execute();
 
     if (!$success) {
-      throw new Exception('Error in SQL queries.');
+      throw new Exception('Error in SQL queries.' . $db->error);
     }
 
     $num += 1;
