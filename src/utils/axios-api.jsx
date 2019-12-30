@@ -6,7 +6,7 @@ const url = process.env.NODE_ENV === 'development' ?
 
 const create = (options) => create_org({
   baseURL: url,
-  timeout: 1000,
+  timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
   ...options
 })
