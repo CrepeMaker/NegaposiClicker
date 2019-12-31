@@ -18,6 +18,7 @@ class ClickerView extends React.Component {
       offset: 0,
       size: 1,
       name,
+      busy: false,
     }
 
     if (!name) {
@@ -82,6 +83,7 @@ class ClickerView extends React.Component {
     }
 
     this.mutex.use(async () => {
+      this.setState({ busy: true })
       if (!this.sentList.has(sentence_id)) {
         if (sentence_id >= 0 && class_id != -1) {
           const res = await this.api.post('api/post_responces.php', {
@@ -94,6 +96,7 @@ class ClickerView extends React.Component {
         }
         this.sentList.add(sentence_id)
       }
+      this.setState({ busy: false })
     })
 
     await this.next()
@@ -129,7 +132,7 @@ class ClickerView extends React.Component {
   }
 
   render() {
-    const { id, sentence, reference } = this.state
+    const { id, sentence, reference, busy } = this.state
 
     const onClick = (negaposi) => {
       this.select(negaposi)
@@ -144,6 +147,7 @@ class ClickerView extends React.Component {
         />
         <NegaposiButtons
           onClick={onClick}
+          busy={busy}
         />
       </Container>
     )
