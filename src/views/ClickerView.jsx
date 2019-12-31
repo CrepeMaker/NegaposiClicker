@@ -82,7 +82,7 @@ class ClickerView extends React.Component {
         break
     }
 
-    this.mutex.use(async () => {
+    await this.mutex.use(async () => {
       this.setState({ busy: true })
       if (!this.sentList.has(sentence_id)) {
         if (sentence_id >= 0 && class_id != -1) {
