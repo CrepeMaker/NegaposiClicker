@@ -10,7 +10,7 @@ class NegaposiButtons extends React.Component {
     return (
       <Container>
         <Row>
-          <Col md={4}>
+          <Col md={3}>
             <Button
               className={styles.button}
               variant='success'
@@ -20,24 +20,34 @@ class NegaposiButtons extends React.Component {
               ポジティブ (p)
             </Button>
           </Col>
-          <Col md={4}>
+          <Col md={3}>
             <Button
               className={styles.button}
               variant='dark'
               block
-              onClick={() => onClick(NegaposiEnums.NEGATIVE)}
+              onClick={() => onClick(NegaposiEnums.NEITHER)}
             >
-              わからない (k)
+              どちらともいえない (k)
             </Button>
           </Col>
-          <Col md={4}>
+          <Col md={3}>
             <Button
               className={styles.button}
               variant='danger'
               block
-              onClick={() => onClick(NegaposiEnums.UNKNOWN)}
+              onClick={() => onClick(NegaposiEnums.NEGATIVE)}
             >
               ネガティブ (n)
+            </Button>
+          </Col>
+          <Col md={3}>
+            <Button
+              className={styles.button}
+              variant='secondary'
+              block
+              onClick={() => onClick(NegaposiEnums.INCOMPREHENSIBLE)}
+            >
+              理解不能 (Space)
             </Button>
           </Col>
         </Row>

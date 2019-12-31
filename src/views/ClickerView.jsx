@@ -72,19 +72,12 @@ class ClickerView extends React.Component {
 
     switch (negaposi) {
       case NegaposiEnums.POSITIVE:
-        class_id = 1
-        console.log('POSITIVE')
-        break
       case NegaposiEnums.NEGATIVE:
-        class_id = 2
-        console.log('NEGATIVE')
-        break
-      case NegaposiEnums.UNKNOWN:
-        class_id = 9
-        console.log('UNKNOWN')
+      case NegaposiEnums.NEITHER:
+      case NagaposiEnums.INCOMPREHENSIBLE:
+        class_id = negaposi
         break
       default:
-        console.log('default')
         break
     }
 
@@ -115,11 +108,13 @@ class ClickerView extends React.Component {
           this.select(NegaposiEnums.POSITIVE)
           break
         case 'k':
-          this.select(NegaposiEnums.UNKNOWN)
+          this.select(NegaposiEnums.NEITHER)
           break
         case 'n':
           this.select(NegaposiEnums.NEGATIVE)
           break
+        case ' ':
+          this.select(NegaposiEnums.INCOMPREHENSIBLE)
       }
     }
 
