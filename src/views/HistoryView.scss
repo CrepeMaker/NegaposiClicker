@@ -1,0 +1,12 @@
+.self{
+  a:not([href]) {
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  a:not([href]):hover {
+    color: #0056b3;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

@@ -1,5 +1,4 @@
 import React from 'react'
-import { withRouter } from 'react-router'
 import { Container, Row, Col, ProgressBar, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { create } from '../utils/axios-api'
 import styles from './InfoView.scss'
@@ -75,4 +74,4 @@ class InfoView extends React.Component {
   }
 }
 
-export default withRouter(InfoView)
+export default InfoView
