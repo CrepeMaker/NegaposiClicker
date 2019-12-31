@@ -74,7 +74,7 @@ class ClickerView extends React.Component {
       case NegaposiEnums.POSITIVE:
       case NegaposiEnums.NEGATIVE:
       case NegaposiEnums.NEITHER:
-      case NagaposiEnums.INCOMPREHENSIBLE:
+      case NegaposiEnums.INCOMPREHENSIBLE:
         class_id = negaposi
         break
       default:
@@ -115,6 +115,7 @@ class ClickerView extends React.Component {
           break
         case ' ':
           this.select(NegaposiEnums.INCOMPREHENSIBLE)
+          break
       }
     }
 
