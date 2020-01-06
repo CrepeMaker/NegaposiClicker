@@ -13,6 +13,7 @@ class TopBar extends React.Component {
         <Navbar.Brand as={Link} to='/'>
           ネガポジ クリッカー
         </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse>
           <Nav className="mr-auto">
             <TopBarLink
@@ -31,7 +32,7 @@ class TopBar extends React.Component {
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
-            {name}
+            User: {name}
           </Navbar.Text>
         </Navbar.Collapse>
       </Navbar>
