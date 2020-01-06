@@ -45,7 +45,7 @@ class InfoView extends React.Component {
   }
 
   render() {
-    const { all, ok, users } = this.state
+    const { all, ok1, ok2, users } = this.state
 
     return (
       <div>
@@ -63,8 +63,14 @@ class InfoView extends React.Component {
             ))
           }
           <InfoView.Bar
+            id={'回答数 >= 1'}
+            num={ok1}
+            all={all}
+            variant='success'
+          />
+          <InfoView.Bar
             id={'回答数 >= 2'}
-            num={ok}
+            num={ok2}
             all={all}
             variant='success'
           />

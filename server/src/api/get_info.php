@@ -19,6 +19,7 @@ try{
 
   $all_num = 0;
   $ok_num = 0;
+  $one_num = 0;
   $id = 0; $num = 0;
 
   // 全体数
@@ -35,6 +36,21 @@ try{
   $stmt_all->bind_result($all_num);
   $stmt_all->fetch();
   $stmt_all->close();
+
+  // 回答者1以上
+  $stmt_merge1 = $db->prepare(
+    'SELECT COUNT(*) FROM (SELECT sentence_id, COUNT(DISTINCT respondent) as num FROM responces GROUP BY sentence_id) as T WHERE num >= 1'
+  );
+
+  $success = $stmt_merge1->execute();
+
+  if (!$success) {
+    throw new Exception('Error in SQL queries. (' . $db->error . ')');
+  }
+
+  $stmt_merge1->bind_result($one_num);
+  $stmt_merge1->fetch();
+  $stmt_merge1->close();
 
   // 回答者2以上
   $stmt_merge = $db->prepare(
@@ -73,7 +89,7 @@ try{
   $stmt_users->close();
 
   http_response_code(200);
-  echo json_encode(array('all' => $all_num, 'ok' => $ok_num, 'users' => $users));
+  echo json_encode(array('all' => $all_num, 'ok1' => $one_num, 'ok2' => $ok_num, 'users' => $users));
 
 } catch (Exception $e) {
   http_response_code(500);
