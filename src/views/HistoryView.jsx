@@ -1,8 +1,7 @@
 import React from 'react'
-import { Container, Button, Table } from 'react-bootstrap'
+import { Form, Table } from 'react-bootstrap'
 import { create } from '../utils/axios-api'
 import { withRouter } from 'react-router'
-import qs from 'qs'
 import NegaposiEnums from '../components/clicker/NagaposiEnums'
 import styles from './HistoryView.scss'
 
@@ -16,6 +15,9 @@ class HistoryView extends React.Component {
       size: 200,
       offset: 0,
       name,
+      all: 0,
+      pages: [],
+      responces: [],
     }
 
     this.api = create()
@@ -24,19 +26,25 @@ class HistoryView extends React.Component {
   async updateResponces() {
     const { size, offset, name } = this.state
 
-    const params = qs.parse((this.props.location.search || '?').slice(1))
-
     const res = await this.api.get('api/get_history.php', {
       params: {
         token: 'g264t3sx65cw9mwiedyf4my9a',
         name,
         size,
-        offset: (params && params.offset) ? params.offset : offset,
+        offset,
       }
     })
 
-    if (res && res.status === 200 && res.data)
-      this.setState({ responces: res.data })
+    if (res && res.status === 200 && res.data) {
+      const { items, all, offset } = res.data
+      const pages = []
+      for (let i = 0; i < res.data.all; i += size) {
+        pages.push([i, Math.min(i + size, res.data.all)])
+      }
+
+      this.setState({ responces: items, all, offset, pages })
+    }
+
   }
 
   async componentDidMount() {
@@ -58,13 +66,34 @@ class HistoryView extends React.Component {
     }
   }
 
+  onChange(e) {
+    this.setState({ offset: e.target.value }, async () => {
+      await this.updateResponces()
+    })
+  }
+
   render() {
-    const { responces } = this.state
+    const { responces, pages, offset, all } = this.state
 
     return (
       <div>
         <h3>回答履歴</h3>
-        <Container className={styles.self}>
+        <Form.Control
+          as="select"
+          className={'float-right'}
+          style={{ width: '25%' }}
+          value={offset}
+          onChange={this.onChange.bind(this)}
+        >
+          {
+            pages && pages.map(page => (
+              <option key={page[0]} value={page[0]}>
+                {page[0] + 1}-{page[1]} / {all}
+              </option>
+            ))
+          }
+        </Form.Control>
+        <div className={styles.self}>
           <Table responsive bordered striped>
             <thead>
               <tr>
@@ -109,7 +138,7 @@ class HistoryView extends React.Component {
               }
             </tbody>
           </Table>
-        </Container>
+        </div>
       </div>
     )
   }

@@ -51,8 +51,11 @@ try{
   }
   $stmt->close();
 
+  $result = $db->query('SELECT FOUND_ROWS() as count');
+  $obj = $result->fetch_object();
+
   http_response_code(200);
-  echo json_encode($data);
+  echo json_encode(array('items' => $data, 'all' => $obj->count, 'offset' => $offset));
 
 } catch (Exception $e) {
   http_response_code(500);
