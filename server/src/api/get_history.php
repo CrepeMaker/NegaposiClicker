@@ -30,7 +30,7 @@ try{
   $offset = array_key_exists('offset', $_GET) ? $_GET['offset'] : 20;
 
   $stmt = $db->prepare(
-    'SELECT responces.id, class, sentence FROM responces, sentences ' .
+    'SELECT SQL_CALC_FOUND_ROWS responces.id, class, sentence FROM responces, sentences ' .
     'WHERE responces.sentence_id = sentences.id AND respondent = ? ' .
     'ORDER BY id DESC LIMIT ? OFFSET ?'
   );

@@ -12,7 +12,7 @@ class HistoryView extends React.Component {
     const name = localStorage.getItem('name') || ''
 
     this.state = {
-      size: 200,
+      size: 100,
       offset: 0,
       name,
       all: 0,
