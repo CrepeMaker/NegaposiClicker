@@ -11,28 +11,20 @@ class HistoryView extends React.Component {
     const name = localStorage.getItem('name') || ''
 
     this.state = {
-      size: 200,
-      offset: 0,
-      name,
+      token,
     }
 
     this.api = create()
   }
 
   async updateResponces() {
-    const { size, offset, name } = this.state
+    const { token } = this.state
 
     const res = await this.api.get('api/get_history.php', {
       params: {
-        token: 'g264t3sx65cw9mwiedyf4my9a',
-        name,
-        size,
-        offset,
+        token,
       }
     })
-
-    if (res && res.status === 200 && res.data)
-      this.setState({ responces: res.data })
   }
 
   async componentDidMount() {
