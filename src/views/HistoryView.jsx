@@ -1,6 +1,8 @@
 import React from 'react'
 import { Container, Button, Table } from 'react-bootstrap'
 import { create } from '../utils/axios-api'
+import { withRouter } from 'react-router'
+import qs from 'qs'
 import NegaposiEnums from '../components/clicker/NagaposiEnums'
 import styles from './HistoryView.scss'
 
@@ -22,12 +24,14 @@ class HistoryView extends React.Component {
   async updateResponces() {
     const { size, offset, name } = this.state
 
+    const params = qs.parse((this.props.location.search || '?').slice(1))
+
     const res = await this.api.get('api/get_history.php', {
       params: {
         token: 'g264t3sx65cw9mwiedyf4my9a',
         name,
         size,
-        offset,
+        offset: (params && params.offset) ? params.offset : offset,
       }
     })
 
@@ -111,4 +115,4 @@ class HistoryView extends React.Component {
   }
 }
 
-export default HistoryView
+export default withRouter(HistoryView)
