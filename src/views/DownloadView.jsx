@@ -1,106 +1,126 @@
 import React from 'react'
-import { Container, Button, Table } from 'react-bootstrap'
+import { Accordion, Card, Button, FormControl } from 'react-bootstrap'
 import { create } from '../utils/axios-api'
-import NegaposiEnums from '../components/clicker/NagaposiEnums'
-import styles from './HistoryView.scss'
+import styles from './DownloadView.scss'
 
-class HistoryView extends React.Component {
+class DownloadView extends React.Component {
   constructor(props) {
     super(props)
 
-    const name = localStorage.getItem('name') || ''
-
     this.state = {
-      token,
+      token: '',
     }
 
     this.api = create()
   }
 
-  async updateResponces() {
-    const { token } = this.state
-
-    const res = await this.api.get('api/get_history.php', {
-      params: {
-        token,
-      }
-    })
-  }
-
-  async componentDidMount() {
-    await this.updateResponces()
-  }
-
-  async update(id, negaposi) {
-    const { name } = this.state
-
-    const res = await this.api.post('api/update_responce.php', {
-      token: 'g264t3sx65cw9mwiedyf4my9a',
-      id,
-      name,
-      class: negaposi,
-    })
-
-    if (res && res.status === 200) {
-      await this.updateResponces()
-    }
+  onChange(e) {
+    const token = (e.target.value || '')
+    this.setState({ token })
   }
 
   render() {
-    const { responces } = this.state
+    const { token } = this.state
+
+    const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : ''
 
     return (
       <div>
-        <h3>回答履歴</h3>
-        <Container className={styles.self}>
-          <Table responsive bordered striped>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>文</th>
-                <th>選択肢</th>
-                <th>変更</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                responces && responces.map(responce => {
-                  const classStr =
-                    responce.class == NegaposiEnums.POSITIVE ? "ポジティブ" :
-                      responce.class == NegaposiEnums.NEITHER ? "どちらともいえない" :
-                        responce.class == NegaposiEnums.NEGATIVE ? "ネガティブ" :
-                          responce.class == NegaposiEnums.INCOMPREHENSIBLE ? "理解不能" :
-                            "---";
-
-                  return (
-                    <tr key={responce.id}>
-                      <td>{responce.id}</td>
-                      <td>{responce.sentence}</td>
-                      <td>{classStr}</td>
-                      <td>
-                        <a onClick={() => this.update(responce.id, NegaposiEnums.POSITIVE)}>
-                          ポジティブ
-                        </a>,
-                        <a onClick={() => this.update(responce.id, NegaposiEnums.NEITHER)}>
-                          どちらともいえない
-                        </a>,
-                        <a onClick={() => this.update(responce.id, NegaposiEnums.NEGATIVE)}>
-                          ネガティブ
-                        </a>,
-                        <a onClick={() => this.update(responce.id, NegaposiEnums.INCOMPREHENSIBLE)}>
-                          理解不能
-                        </a>
-                      </td>
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </Table>
-        </Container>
+        <h3>ダウンロード</h3>
+        <FormControl
+          placeholder="Download Token"
+          onChange={this.onChange.bind(this)}
+          value={token}
+        />
+        <Accordion defaultActiveKey="0">
+          <Card>
+            <Card.Header>
+              <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                文章一覧
+              </Accordion.Toggle>
+            </Card.Header>
+            <Accordion.Collapse eventKey="0">
+              <Card.Body>
+                <pre>
+                  <code>
+                    SELECT id, sentence, reference FROM `sentences`
+                  </code>
+                </pre>
+                <Button
+                  href={`${baseURL}/api/download_data.php?type=csv&kind=sentences&token=${token}`}
+                  download={'文章一覧.csv'}
+                >
+                  Download CSV
+                </Button>
+                <a
+                  href={`${baseURL}/api/download_data.php?type=json&kind=sentences&token=${token}`}
+                  download={'文章一覧.json'}
+                >
+                  Download JSON
+                </a>
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card>
+          <Card>
+            <Card.Header>
+              <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                回答一覧
+              </Accordion.Toggle>
+            </Card.Header>
+            <Accordion.Collapse eventKey="1">
+              <Card.Body>
+                <pre>
+                  <code>
+                    SELECT id, sentence_id, respondent, class FROM `responces`
+                  </code>
+                </pre>
+                <Button
+                  href={`${baseURL}/api/download_data.php?type=csv&kind=responces&token=${token}`}
+                  download={'回答一覧.csv'}
+                >
+                  Download CSV
+                </Button>
+                <Button
+                  href={`${baseURL}/api/download_data.php?type=json&kind=responces&token=${token}`}
+                  download={'回答一覧.json'}
+                >
+                  Download JSON
+                </Button>
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card>
+          <Card>
+            <Card.Header>
+              <Accordion.Toggle as={Button} variant="link" eventKey="2">
+                回答一覧 with 文章
+              </Accordion.Toggle>
+            </Card.Header>
+            <Accordion.Collapse eventKey="2">
+              <Card.Body>
+                <pre>
+                  <code>
+                    SELECT responces.id, responces.class, sentences.id, sentences.sentence, sentences.reference FROM `responces`, `sentences` WHERE sentences.id = responces.sentence_id
+                  </code>
+                </pre>
+                <Button
+                  href={`${baseURL}/api/download_data.php?type=csv&kind=responceswithsentences&token=${token}`}
+                  download={'回答一覧with文章.csv'}
+                >
+                  Download CSV
+                </Button>
+                <Button
+                  href={`${baseURL}/api/download_data.php?type=json&kind=responceswithsentences&token=${token}`}
+                  download={'回答一覧with文章.csv'}
+                >
+                  Download JSON
+                </Button>
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
       </div>
     )
   }
 }
 
-export default HistoryView
+export default DownloadView

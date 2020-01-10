@@ -28,6 +28,10 @@ class TopBar extends React.Component {
               to='/history'
               title="History"
             />
+            <TopBarLink
+              to='/download'
+              title="Download"
+            />
           </Nav>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">
