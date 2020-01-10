@@ -52,12 +52,12 @@ class DownloadView extends React.Component {
                 >
                   Download CSV
                 </Button>
-                <a
+                <Button
                   href={`${baseURL}/api/download_data.php?type=json&kind=sentences&token=${token}`}
                   download={'文章一覧.json'}
                 >
                   Download JSON
-                </a>
+                </Button>
               </Card.Body>
             </Accordion.Collapse>
           </Card>
