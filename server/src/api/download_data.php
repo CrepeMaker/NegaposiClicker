@@ -80,7 +80,8 @@ try{
     }
     while($row = $result->fetch_array(MYSQLI_NUM)) {
       for ($i = 0; $i < count($columns); $i++) {
-        echo '"' . $row[$i] . '"';
+        $text = str_replace(["\r\n", "\r", "\n"], '　　', $row[$i]);
+        echo '"' . $text . '"';
         if ($i + 1 < count($columns)) {
           echo ',';
         } else {
