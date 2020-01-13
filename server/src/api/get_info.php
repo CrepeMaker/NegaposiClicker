@@ -3,6 +3,7 @@
 $env_ini = parse_ini_file("../env.ini");
 
 $db = new mysqli($env_ini['DB_SERVER'], $env_ini['DB_USER'], $env_ini['DB_PASSWORD'], $env_ini['DB_DATABASE']);
+$db->set_charset('utf8');
 
 if( $db->connect_error ){
   echo "Connection could not be established.<br/>;";
